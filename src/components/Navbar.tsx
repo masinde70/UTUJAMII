@@ -38,17 +38,23 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-500",
-        isScrolled
-          ? "bg-background/90 backdrop-blur-md border-b border-border py-4"
+        isMobileMenuOpen
+          ? "bg-transparent border-b border-transparent py-4"
+          : isScrolled
+          ? "bg-primary/95 backdrop-blur-md border-b border-primary-foreground/10 py-4"
           : "bg-transparent border-b border-transparent py-6"
       )}
     >
       <div className="container mx-auto px-6 md:px-10 flex items-center justify-between">
-        {/* Logo — Always visible */}
-        <Link href="/" className="relative z-50">
-          <span className="font-serif text-[1.6rem] font-bold tracking-tight text-foreground">
-            Utu Jamii
-          </span>
+        {/* Logo — flips to cream when scrolled (but not when mobile menu is open) */}
+        <Link
+          href="/"
+          className="relative z-50 font-serif text-[1.6rem] font-bold tracking-tight transition-colors duration-500"
+          style={{
+            color: isScrolled && !isMobileMenuOpen ? "#faf9f6" : "#1a1a14",
+          }}
+        >
+          Utu Jamii
         </Link>
 
         {/* Desktop Navigation — Right aligned */}
@@ -57,14 +63,24 @@ export function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-[13px] font-medium uppercase tracking-[0.15em] text-foreground/80 hover:text-foreground transition-colors duration-300"
+              className={cn(
+                "text-[13px] font-medium uppercase tracking-[0.15em] transition-colors duration-300",
+                isScrolled
+                  ? "text-primary-foreground/80 hover:text-primary-foreground"
+                  : "text-foreground/80 hover:text-foreground"
+              )}
             >
               {link.name}
             </Link>
           ))}
           <Link
             href="/about#contact"
-            className="group flex items-center gap-2 ml-4 bg-primary text-primary-foreground px-5 py-2.5 text-[12px] font-medium uppercase tracking-[0.15em] hover:bg-primary/90 transition-colors"
+            className={cn(
+              "group flex items-center gap-2 ml-4 px-5 py-2.5 text-[12px] font-medium uppercase tracking-[0.15em] transition-colors duration-500",
+              isScrolled
+                ? "bg-accent text-accent-foreground hover:bg-accent/90"
+                : "bg-primary text-primary-foreground hover:bg-primary/90"
+            )}
           >
             <span>Get in Touch</span>
             <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -73,7 +89,10 @@ export function Navbar() {
 
         {/* Mobile Toggle */}
         <button
-          className="lg:hidden relative z-50 text-foreground"
+          className={cn(
+            "lg:hidden relative z-50 transition-colors duration-500",
+            isScrolled && !isMobileMenuOpen ? "text-primary-foreground" : "text-foreground"
+          )}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
         >

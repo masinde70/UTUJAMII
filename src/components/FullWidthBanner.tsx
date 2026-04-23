@@ -5,35 +5,99 @@ import { motion } from "framer-motion";
 
 export function FullWidthBanner() {
   return (
-    <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
-      {/* Background image */}
+    <section className="relative min-h-[65vh] md:min-h-[78vh] bg-primary text-primary-foreground overflow-hidden flex items-center">
+      {/* Subtle noise for depth */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-screen"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1542810634-71277d95dcbb?q=80&w=2070&auto=format&fit=crop')",
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         }}
       />
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-primary/70" />
+
+      {/* Decorative woven threads — ambient, mirrored on both sides */}
+      <WovenMotif className="absolute top-0 left-6 md:left-10 h-full w-[22px] opacity-40" />
+      <WovenMotif className="absolute top-0 right-6 md:right-10 h-full w-[22px] opacity-40" />
+
+      {/* Corner editorial marks */}
+      <div className="absolute top-6 left-6 md:top-10 md:left-10 flex items-center gap-3 text-primary-foreground/60 text-[10px] uppercase tracking-[0.3em]">
+        <span className="w-8 h-px bg-primary-foreground/40" />
+        <span>Interlude</span>
+      </div>
+      <div className="absolute top-6 right-6 md:top-10 md:right-10 flex items-center gap-3 text-primary-foreground/60 text-[10px] uppercase tracking-[0.3em] tabular-nums">
+        <span>—</span>
+        <span className="w-8 h-px bg-primary-foreground/40" />
+      </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center justify-center">
+      <div className="relative z-10 w-full container mx-auto px-6 md:px-10 py-24 md:py-36">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center px-6"
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-[960px] mx-auto text-center"
         >
-          <h2 className="font-serif text-[clamp(2.2rem,5vw,4.5rem)] font-normal text-white leading-[1.1] max-w-4xl mx-auto">
-            Beyond Profits,<br />
-            Building a Brighter Future
+          <h2
+            className="font-serif-display text-[clamp(2.4rem,6.5vw,5.8rem)] font-light text-primary-foreground leading-[1.02]"
+            style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100', letterSpacing: "-0.015em" }}
+          >
+            Beyond Profits,
+            <br />
+            <em className="not-italic italic font-normal">Building a Brighter Future.</em>
           </h2>
-          <p className="text-white/60 text-[15px] md:text-base mt-6 max-w-lg mx-auto leading-relaxed">
-            Beyond the mutual misunderstandings, beyond the unnecessary conflicts — finding the formula where business thrives and communities flourish.
-          </p>
+
+          <div className="mt-10 mx-auto w-16 h-px bg-accent" />
+
+          <blockquote className="mt-12 max-w-xl mx-auto">
+            <p className="font-serif italic text-[1.1rem] md:text-[1.3rem] leading-[1.5] text-primary-foreground/85">
+              &ldquo;If you want to go fast, go alone. If you want to go far — go together.&rdquo;
+            </p>
+            <cite className="not-italic text-[10px] uppercase tracking-[0.28em] text-primary-foreground/55 block mt-4">
+              — African Proverb
+            </cite>
+          </blockquote>
         </motion.div>
       </div>
+
+      {/* Bottom caption */}
+      <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 text-[10px] uppercase tracking-[0.3em] text-primary-foreground/45">
+        Pause · Chapter Break
+      </div>
+      <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 text-[10px] uppercase tracking-[0.3em] text-primary-foreground/45 tabular-nums">
+        N° 05 · Interlude
+      </div>
     </section>
+  );
+}
+
+function WovenMotif({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 22 800"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <defs>
+        <linearGradient id="banner-thread" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#c96b42" stopOpacity="0" />
+          <stop offset="25%" stopColor="#c96b42" stopOpacity="0.7" />
+          <stop offset="75%" stopColor="#faf9f6" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#faf9f6" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M11 0 Q 22 40 11 80 Q 0 120 11 160 Q 22 200 11 240 Q 0 280 11 320 Q 22 360 11 400 Q 0 440 11 480 Q 22 520 11 560 Q 0 600 11 640 Q 22 680 11 720 Q 0 760 11 800"
+        fill="none"
+        stroke="url(#banner-thread)"
+        strokeWidth="0.8"
+      />
+      <path
+        d="M11 0 Q 0 40 11 80 Q 22 120 11 160 Q 0 200 11 240 Q 22 280 11 320 Q 0 360 11 400 Q 22 440 11 480 Q 0 520 11 560 Q 22 600 11 640 Q 0 680 11 720 Q 22 760 11 800"
+        fill="none"
+        stroke="url(#banner-thread)"
+        strokeWidth="0.8"
+      />
+    </svg>
   );
 }

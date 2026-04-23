@@ -132,13 +132,14 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Large brand watermark */}
-      <div className="container mx-auto px-6 md:px-10 pb-8">
-        <div className="text-right">
-          <span className="font-serif text-[clamp(3rem,8vw,6rem)] font-normal text-primary-foreground/[0.04] leading-none select-none">
-            Utu Jamii
-          </span>
-        </div>
+      {/* Subtle watermark — small editorial imprint */}
+      <div className="container mx-auto px-6 md:px-10 pb-6 flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-primary-foreground/25">
+          Weaving Threads · Since 2016
+        </span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-primary-foreground/25 tabular-nums">
+          Dar es Salaam — 06°49′S
+        </span>
       </div>
     </footer>
   );

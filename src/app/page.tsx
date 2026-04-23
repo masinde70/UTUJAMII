@@ -6,6 +6,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { AboutPreview } from "@/components/AboutPreview";
 import { FullWidthBanner } from "@/components/FullWidthBanner";
 import { ContactSection } from "@/components/ContactSection";
+import { InPractice } from "@/components/InPractice";
 
 const services = [
   {
@@ -42,32 +43,39 @@ export default function Home() {
       <AboutPreview />
 
       {/* Expertise Section */}
-      <section className="py-20 md:py-28 bg-background">
+      <section className="py-24 md:py-32 bg-background">
         <div className="container mx-auto px-6 md:px-10">
-          {/* Section header */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-px bg-accent" />
-                <span className="text-[12px] uppercase tracking-[0.25em] text-muted-foreground font-medium">
-                  Our Services
+          {/* Section masthead */}
+          <div className="flex items-end justify-between border-b border-foreground/15 pb-4 mb-20 md:mb-28">
+            <span className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-foreground/50">
+              § The Practice
+            </span>
+            <span className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-foreground/50 tabular-nums">
+              Chapter 02
+            </span>
+          </div>
+
+          {/* Heading + link */}
+          <div className="grid grid-cols-12 gap-x-6 md:gap-x-10 mb-16 md:mb-20">
+            <h2 className="col-span-12 md:col-span-9 font-serif text-[clamp(2rem,4.2vw,3.4rem)] font-light text-foreground leading-[1.08]">
+              Comprehensive solutions for{" "}
+              <em className="not-italic text-foreground/55">complex social landscapes.</em>
+            </h2>
+            <div className="col-span-12 md:col-span-3 flex md:justify-end md:items-end mt-6 md:mt-0">
+              <a
+                href="/services"
+                className="group relative text-[12px] uppercase tracking-[0.22em] text-foreground font-medium py-1"
+              >
+                <span className="relative">
+                  Explore All Services
+                  <span className="absolute -bottom-0.5 left-0 w-full h-px bg-accent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
                 </span>
-              </div>
-              <h2 className="font-serif text-[clamp(1.8rem,3.5vw,2.8rem)] font-normal text-foreground leading-tight">
-                Comprehensive Solutions<br />
-                for Complex Social Landscapes
-              </h2>
+              </a>
             </div>
-            <a
-              href="/services"
-              className="text-[13px] uppercase tracking-[0.15em] text-foreground font-medium hover:text-accent transition-colors border-b border-foreground hover:border-accent pb-1"
-            >
-              Explore All
-            </a>
           </div>
 
           {/* Services grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-8 gap-y-4">
             {services.map((service, index) => (
               <ServiceCard
                 key={index}
@@ -81,6 +89,7 @@ export default function Home() {
         </div>
       </section>
 
+      <InPractice />
       <Testimonials />
       <FullWidthBanner />
       <AnimatedStats />
