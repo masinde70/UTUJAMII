@@ -128,6 +128,13 @@ export function Footer() {
             <Link href="#" className="group flex items-center gap-1 text-[12px] text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors">
               Instagram <ArrowUpRight size={10} />
             </Link>
+            <span aria-hidden className="text-primary-foreground/15">·</span>
+            <Link
+              href="/admin/login"
+              className="group flex items-center gap-1 text-[12px] text-primary-foreground/30 hover:text-primary-foreground/70 transition-colors"
+            >
+              Editor
+            </Link>
           </div>
         </div>
       </div>
