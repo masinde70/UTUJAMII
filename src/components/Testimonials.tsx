@@ -2,38 +2,21 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { HOME_FALLBACK } from "@/lib/cms/home-fallback";
+import type { TestimonialItem } from "@/types/cms";
 
-const testimonials = [
-  {
-    quote:
-      "Before UTU JAMII came, there was confusion and anger. Then they arrived, listened to our worries, and built bridges between us and the company. They trained our women, helped resolve grievances fairly, and ensured our children weren't forgotten. UTU JAMII isn't just a name; it's a feeling of hope woven into the fabric of our village.",
-    author: "Bi Aisha",
-    initials: "BA",
-    org: "Community Leader",
-    project: "Fungoni Mineral Sands",
-    location: "Pwani",
-  },
-  {
-    quote:
-      "UTU JAMII, with their gentle hands and patient hearts, guided us. They trained our women, empowered them to speak up, and showed us how to fight for justice together. Now the committees stand strong, a shield against violence, and our community feels safer, more unified. They haven't just given us tools; they've given us courage.",
-    author: "Bwana Hamis",
-    initials: "BH",
-    org: "Worker and Councillor",
-    project: "Community Grievance Programme",
-    location: "Geita",
-  },
-  {
-    quote:
-      "Community relations were strained, mistrust ran high, and navigating complex social dynamics threatened project progress. That's when we partnered with UTU JAMII. They became our bridge, their facilitation expertise smoothing communication channels and building trust. They weren't just a consultant; they were a skilled diplomat, weaving threads of understanding.",
-    author: "Mr. Rashid",
-    initials: "MR",
-    org: "Project Manager",
-    project: "Mwadui Resettlement",
-    location: "Shinyanga",
-  },
-];
+function initialsFor(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toUpperCase())
+    .join("");
+}
 
-export function Testimonials() {
+export function Testimonials({ items }: { items?: TestimonialItem[] } = {}) {
+  const testimonials =
+    items && items.length > 0 ? items : HOME_FALLBACK.testimonials;
   return (
     <section className="relative py-24 md:py-32 bg-background overflow-hidden">
       <div className="container mx-auto px-6 md:px-10">
@@ -94,7 +77,7 @@ export function Testimonials() {
                   className="shrink-0 w-11 h-11 rounded-full border border-accent/50 bg-accent/[0.08] flex items-center justify-center"
                 >
                   <span className="font-serif text-[14px] text-accent tracking-wide">
-                    {t.initials}
+                    {initialsFor(t.author)}
                   </span>
                 </div>
                 <div className="flex-1">

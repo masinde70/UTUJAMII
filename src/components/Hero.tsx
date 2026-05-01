@@ -4,8 +4,21 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, ArrowDown } from "lucide-react";
+import { HOME_FALLBACK } from "@/lib/cms/home-fallback";
+import type { HomePage } from "@/types/cms";
 
-export function Hero() {
+type HeroData = Pick<
+  HomePage,
+  | "heroLine1"
+  | "heroLine2"
+  | "heroConjunction"
+  | "heroLine3"
+  | "heroLine4"
+  | "heroPlateCaption"
+>;
+
+export function Hero({ data }: { data?: HeroData }) {
+  const d = data ?? HOME_FALLBACK;
   const today = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "long",
@@ -66,28 +79,28 @@ export function Hero() {
               className="font-serif-display text-[clamp(2.7rem,8vw,7rem)] font-light leading-[0.95] text-foreground"
               style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
             >
-              Bridging
+              {d.heroLine1}
               <br />
               <em
                 className="not-italic font-normal text-primary"
                 style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
               >
-                Communities
+                {d.heroLine2}
               </em>
               <br />
-              <span className="text-foreground/30 italic font-light">&amp;</span>{" "}
+              <span className="text-foreground/30 italic font-light">{d.heroConjunction}</span>{" "}
               <span
                 className="italic font-light text-foreground/85"
                 style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
               >
-                Business
+                {d.heroLine3}
               </span>
               <br />
               <span
                 className="font-light"
                 style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
               >
-                Together.
+                {d.heroLine4}
               </span>
             </h1>
 
@@ -129,7 +142,7 @@ export function Hero() {
             {/* Plate caption — editorial style */}
             <figcaption className="mt-4 flex items-start justify-between gap-3 border-t border-foreground/15 pt-3">
               <p className="text-[12px] text-foreground/60 leading-[1.55] max-w-[220px]">
-                The environment for a bright future — where business thrives &amp; community flourishes.
+                {d.heroPlateCaption}
               </p>
               <span className="text-[10px] uppercase tracking-[0.25em] text-foreground/50 whitespace-nowrap tabular-nums">
                 Plate 01 · Dar es Salaam

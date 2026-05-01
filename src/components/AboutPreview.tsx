@@ -2,23 +2,20 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { HOME_FALLBACK } from "@/lib/cms/home-fallback";
+import type { HomePage } from "@/types/cms";
 
-const principles = [
-  {
-    index: "i.",
-    title: "Empowerment at the Core",
-    body:
-      "We equip communities and businesses with the tools they need to thrive together, fostering lasting and sustainable change.",
-  },
-  {
-    index: "ii.",
-    title: "Dignity in Action",
-    body:
-      "We value Utu — the essence of being human — working with respect for cultural dignity, inclusivity, and interconnectedness.",
-  },
-];
+type AboutPreviewData = Pick<
+  HomePage,
+  "aboutHeading" | "aboutBody1" | "aboutBody2" | "aboutQuote" | "aboutPrinciples"
+>;
 
-export function AboutPreview() {
+const ROMAN = ["i.", "ii.", "iii.", "iv.", "v.", "vi.", "vii.", "viii."];
+
+export function AboutPreview({ data }: { data?: AboutPreviewData }) {
+  const d = data ?? HOME_FALLBACK;
+  const firstChar = d.aboutBody1.charAt(0);
+  const restOfBody1 = d.aboutBody1.slice(1);
   return (
     <section className="relative py-24 md:py-40 bg-background overflow-hidden">
       <div className="container mx-auto px-6 md:px-10">
@@ -78,8 +75,7 @@ export function AboutPreview() {
             className="col-span-12 md:col-span-6 md:pt-4"
           >
             <h2 className="font-serif text-[clamp(2rem,4.2vw,3.4rem)] font-light text-foreground leading-[1.08] mb-10 md:mb-12">
-              Hand in hand, hearts aligned —{" "}
-              <em className="not-italic text-foreground/55">weaving progress</em> thread by thread.
+              {d.aboutHeading}
             </h2>
 
             {/* Body with editorial drop cap */}
@@ -89,18 +85,18 @@ export function AboutPreview() {
                   className="float-left font-serif-display text-[5.2rem] leading-[0.82] mr-3 mt-2 text-primary"
                   style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
                 >
-                  U
+                  {firstChar}
                 </span>
-                TU JAMII provides the link between businesses, government, communities and other stakeholders — creating the environment to build a bright future together. We believe in <em className="text-foreground italic">utu</em>, the Swahili essence of shared humanity and dignity.
+                {restOfBody1}
               </p>
               <p className="text-[16px] md:text-[17px] text-foreground/75 leading-[1.75] mb-12">
-                We don&apos;t just deliver solutions — we equip communities and businesses with the tools they need to thrive together, fostering lasting change across Tanzania and East Africa.
+                {d.aboutBody2}
               </p>
 
               {/* Editorial pull quote */}
               <blockquote className="border-l-2 border-accent pl-6 mb-14">
                 <p className="font-serif italic text-[1.25rem] md:text-[1.4rem] leading-[1.35] text-foreground">
-                  &ldquo;If you want to go fast, go alone. If you want to go far — go together.&rdquo;
+                  &ldquo;{d.aboutQuote}&rdquo;
                 </p>
                 <cite className="not-italic text-[10px] uppercase tracking-[0.25em] text-foreground/50 block mt-3">
                   — African Proverb
@@ -110,10 +106,13 @@ export function AboutPreview() {
 
             {/* Numbered principles */}
             <div className="border-t border-foreground/15 pt-10 space-y-8">
-              {principles.map((p) => (
-                <div key={p.title} className="grid grid-cols-12 gap-4">
+              {(d.aboutPrinciples.length > 0
+                ? d.aboutPrinciples
+                : HOME_FALLBACK.aboutPrinciples
+              ).map((p, i) => (
+                <div key={p.title || i} className="grid grid-cols-12 gap-4">
                   <span className="col-span-2 md:col-span-1 font-serif italic text-[15px] text-accent pt-0.5 tabular-nums">
-                    {p.index}
+                    {ROMAN[i] ?? `${i + 1}.`}
                   </span>
                   <div className="col-span-10 md:col-span-11">
                     <h3 className="font-serif text-[1.15rem] text-foreground mb-1.5">{p.title}</h3>

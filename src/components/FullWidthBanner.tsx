@@ -2,8 +2,25 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { HOME_FALLBACK } from "@/lib/cms/home-fallback";
 
-export function FullWidthBanner() {
+type Props = {
+  headline1?: string;
+  headline2?: string;
+  quote?: string;
+  attribution?: string;
+};
+
+export function FullWidthBanner({
+  headline1,
+  headline2,
+  quote,
+  attribution,
+}: Props = {}) {
+  const h1 = headline1 || HOME_FALLBACK.bannerHeadline1;
+  const h2 = headline2 || HOME_FALLBACK.bannerHeadline2;
+  const q = quote || HOME_FALLBACK.bannerQuote;
+  const attr = attribution || HOME_FALLBACK.bannerQuoteAttribution;
   return (
     <section className="relative min-h-[65vh] md:min-h-[78vh] bg-primary text-primary-foreground overflow-hidden flex items-center">
       {/* Subtle noise for depth */}
@@ -41,19 +58,19 @@ export function FullWidthBanner() {
             className="font-serif-display text-[clamp(2.4rem,6.5vw,5.8rem)] font-light text-primary-foreground leading-[1.02]"
             style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100', letterSpacing: "-0.015em" }}
           >
-            Beyond Profits,
+            {h1}
             <br />
-            <em className="not-italic italic font-normal">Building a Brighter Future.</em>
+            <em className="not-italic italic font-normal">{h2}</em>
           </h2>
 
           <div className="mt-10 mx-auto w-16 h-px bg-accent" />
 
           <blockquote className="mt-12 max-w-xl mx-auto">
             <p className="font-serif italic text-[1.1rem] md:text-[1.3rem] leading-[1.5] text-primary-foreground/85">
-              &ldquo;If you want to go fast, go alone. If you want to go far — go together.&rdquo;
+              &ldquo;{q}&rdquo;
             </p>
             <cite className="not-italic text-[10px] uppercase tracking-[0.28em] text-primary-foreground/55 block mt-4">
-              — African Proverb
+              — {attr}
             </cite>
           </blockquote>
         </motion.div>

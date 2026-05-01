@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
+import { HOME_FALLBACK } from "@/lib/cms/home-fallback";
+import type { StatItem as StatItemData } from "@/types/cms";
 
 interface StatItemProps {
   end: number;
@@ -64,7 +66,7 @@ function StatItem({ end, suffix = "", label, caption, index }: StatItemProps) {
   );
 }
 
-export function AnimatedStats() {
+export function AnimatedStats({ stats: statsProp }: { stats?: StatItemData[] } = {}) {
   const controls = useAnimation();
   const ref = React.useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
@@ -73,12 +75,8 @@ export function AnimatedStats() {
     if (isInView) controls.start("visible");
   }, [controls, isInView]);
 
-  const stats = [
-    { end: 10, suffix: "k+", label: "Women Trained", caption: "Across Tanzania", index: "01" },
-    { end: 50, suffix: "+", label: "Communities Reached", caption: "East Africa", index: "02" },
-    { end: 120, suffix: "+", label: "Projects Delivered", caption: "Since 2016", index: "03" },
-    { end: 95, suffix: "%", label: "Client Retention", caption: "Partner Rate", index: "04" },
-  ];
+  const stats =
+    statsProp && statsProp.length > 0 ? statsProp : HOME_FALLBACK.stats;
 
   return (
     <section className="relative py-24 md:py-40 bg-primary text-primary-foreground overflow-hidden" ref={ref}>
@@ -112,7 +110,7 @@ export function AnimatedStats() {
         >
           {stats.map((stat, i) => (
             <motion.div
-              key={stat.label}
+              key={stat.label + i}
               variants={{
                 hidden: { opacity: 0, y: 24 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
@@ -124,7 +122,7 @@ export function AnimatedStats() {
                 suffix={stat.suffix}
                 label={stat.label}
                 caption={stat.caption}
-                index={stat.index}
+                index={String(i + 1).padStart(2, "0")}
               />
             </motion.div>
           ))}

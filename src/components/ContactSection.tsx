@@ -3,8 +3,17 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { HOME_FALLBACK } from "@/lib/cms/home-fallback";
 
-export function ContactSection() {
+type ContactData = {
+  contactAddress: string;
+  contactEmail: string;
+  contactPhone: string;
+};
+
+export function ContactSection({ data }: { data?: ContactData }) {
+  const d = data ?? HOME_FALLBACK;
+  const phoneHref = d.contactPhone.replace(/[^0-9+]/g, "");
   return (
     <section id="contact" className="py-20 md:py-28 bg-surface-alt">
       <div className="container mx-auto px-6 md:px-10">
@@ -44,15 +53,21 @@ export function ContactSection() {
             </h3>
 
             <div className="space-y-4 text-[14px] text-muted-foreground mt-8">
-              <p>P.O. Box 3661, Kigamboni<br />Dar es Salaam, Tanzania</p>
+              <p className="whitespace-pre-line">{d.contactAddress}</p>
               <p>
-                <a href="mailto:info@utujamii.com" className="hover:text-foreground transition-colors">
-                  info@utujamii.com
+                <a
+                  href={`mailto:${d.contactEmail}`}
+                  className="hover:text-foreground transition-colors"
+                >
+                  {d.contactEmail}
                 </a>
               </p>
               <p>
-                <a href="tel:+255712077908" className="hover:text-foreground transition-colors">
-                  +255 712 077 908
+                <a
+                  href={`tel:${phoneHref}`}
+                  className="hover:text-foreground transition-colors"
+                >
+                  {d.contactPhone}
                 </a>
               </p>
               <p className="text-[13px] text-muted-foreground/70 pt-2">

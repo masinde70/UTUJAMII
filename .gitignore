@@ -36,6 +36,16 @@ yarn-error.log*
 # vercel
 .vercel
 
+# firebase
+firebase-admin-key.json
+*-firebase-adminsdk-*.json
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# claude code session data
+.claude/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

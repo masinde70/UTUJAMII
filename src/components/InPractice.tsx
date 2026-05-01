@@ -4,62 +4,52 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { SAMPLE_PROJECTS } from "@/lib/cms/sample-projects";
+import type { Project } from "@/types/cms";
 
-type Project = {
+type Card = {
   index: string;
+  slug: string;
   title: string;
   location: string;
   sector: string;
   summary: string;
-  image: string;
-  alt: string;
-  href: string;
+  imageUrl: string;
+  imageAlt: string;
 };
 
-const projects: Project[] = [
-  {
-    index: "01",
-    title: "Fungoni Mineral Sands",
-    location: "Pwani Region, Tanzania",
-    sector: "Mining",
-    summary:
-      "When mistrust ran high between the company and the village, our team arrived, listened, and built the bridge. Women's training, grievance committees, and a dignified pathway back to partnership.",
-    image:
-      "https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=1800&auto=format&fit=crop",
-    alt: "Community workshop participants gathered around a table",
-    href: "/projects",
-  },
-  {
-    index: "02",
-    title: "Mwadui Resettlement",
-    location: "Shinyanga Region, Tanzania",
-    sector: "Infrastructure",
-    summary:
-      "Strained relations, complex social dynamics, and a project at risk. We became the bridge — facilitating workshops, smoothing communication, and weaving threads of understanding between stakeholders and community.",
-    image:
-      "https://images.unsplash.com/photo-1542810634-71277d95dcbb?q=80&w=1800&auto=format&fit=crop",
-    alt: "Gathering of community members in discussion",
-    href: "/projects",
-  },
-  {
-    index: "03",
-    title: "Women's Leadership Programme",
-    location: "Geita Region, Tanzania",
-    sector: "Training & Facilitation",
-    summary:
-      "Training women to speak up, to lead committees, to stand as a shield against violence. What began as grievance resolution became a programme of courage — and a community more unified than before.",
-    image:
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1800&auto=format&fit=crop",
-    alt: "Women leading a community session",
-    href: "/projects",
-  },
-];
+function buildCards(projects: Project[] | undefined): Card[] {
+  const fromCms: Card[] = (projects ?? []).slice(0, 3).map((p, i) => ({
+    index: String(i + 1).padStart(2, "0"),
+    slug: p.id,
+    title: p.title,
+    location: p.client ?? "Tanzania",
+    sector: p.client ?? "Engagement",
+    summary: p.summary,
+    imageUrl: p.mainImage?.url ?? SAMPLE_PROJECTS[i % 3].mainImage!.url,
+    imageAlt: p.mainImage?.alt ?? p.title,
+  }));
 
-export function InPractice() {
+  const fillers = SAMPLE_PROJECTS.slice(fromCms.length, 3).map((s, i) => ({
+    index: String(fromCms.length + i + 1).padStart(2, "0"),
+    slug: s.slug,
+    title: s.title,
+    location: s.location,
+    sector: s.sector,
+    summary: s.summary,
+    imageUrl: s.mainImage!.url,
+    imageAlt: s.mainImage!.alt,
+  }));
+
+  return [...fromCms, ...fillers].slice(0, 3);
+}
+
+export function InPractice({ projects }: { projects?: Project[] }) {
+  const cards = buildCards(projects);
+
   return (
     <section className="relative py-24 md:py-40 bg-background overflow-hidden">
       <div className="container mx-auto px-6 md:px-10">
-        {/* Section masthead */}
         <div className="flex items-end justify-between border-b border-foreground/15 pb-4 mb-20 md:mb-28">
           <span className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-foreground/50">
             § In Practice
@@ -69,7 +59,6 @@ export function InPractice() {
           </span>
         </div>
 
-        {/* Intro */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -79,7 +68,9 @@ export function InPractice() {
         >
           <h2 className="col-span-12 md:col-span-8 font-serif text-[clamp(2rem,4.2vw,3.4rem)] font-light text-foreground leading-[1.08]">
             Projects in motion —{" "}
-            <em className="not-italic text-foreground/55">across Tanzania &amp; East Africa.</em>
+            <em className="not-italic text-foreground/55">
+              across Tanzania &amp; East Africa.
+            </em>
           </h2>
           <div className="col-span-12 md:col-span-4 md:text-right mt-6 md:mt-0">
             <Link
@@ -98,12 +89,11 @@ export function InPractice() {
           </div>
         </motion.div>
 
-        {/* Project blocks — alternating, middle one featured on dark green */}
         <div className="flex flex-col gap-24 md:gap-36">
-          {projects.map((p, i) => (
+          {cards.map((card, i) => (
             <ProjectBlock
-              key={p.title}
-              project={p}
+              key={card.slug}
+              card={card}
               reverse={i % 2 === 1}
               featured={i === 1}
             />
@@ -115,11 +105,11 @@ export function InPractice() {
 }
 
 function ProjectBlock({
-  project,
+  card,
   reverse,
   featured = false,
 }: {
-  project: Project;
+  card: Card;
   reverse: boolean;
   featured?: boolean;
 }) {
@@ -131,46 +121,39 @@ function ProjectBlock({
       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
       className="grid grid-cols-12 gap-x-6 md:gap-x-12 gap-y-8 items-center"
     >
-      {/* Figure */}
       <figure
-        className={`col-span-12 md:col-span-8 relative ${
-          reverse ? "md:order-2" : ""
-        }`}
+        className={`col-span-12 md:col-span-8 relative ${reverse ? "md:order-2" : ""}`}
       >
         <div className="relative aspect-[3/2] w-full overflow-hidden bg-muted group">
           <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.8s] ease-out group-hover:scale-[1.04]"
-            style={{ backgroundImage: `url('${project.image}')` }}
+            style={{ backgroundImage: `url('${card.imageUrl}')` }}
             role="img"
-            aria-label={project.alt}
+            aria-label={card.imageAlt}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/25" />
-          {/* Corner marks */}
           <span className="absolute top-3 left-3 w-3 h-3 border-t border-l border-white/70" />
           <span className="absolute top-3 right-3 w-3 h-3 border-t border-r border-white/70" />
           <span className="absolute bottom-3 left-3 w-3 h-3 border-b border-l border-white/70" />
           <span className="absolute bottom-3 right-3 w-3 h-3 border-b border-r border-white/70" />
-          {/* Sector stamp */}
           <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm px-3 py-1.5">
             <span className="text-[10px] uppercase tracking-[0.25em] text-foreground/70">
-              {project.sector}
+              {card.sector}
             </span>
           </div>
         </div>
         <figcaption className="mt-4 flex items-start justify-between gap-3 border-t border-foreground/15 pt-3">
           <span className="text-[11px] uppercase tracking-[0.22em] text-foreground/55">
-            Project {project.index} · {project.location}
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-foreground/40">
-            Photo placeholder — replace with field image
+            Project {card.index} · {card.location}
           </span>
         </figcaption>
       </figure>
 
-      {/* Text block — plain or featured (dark green panel) */}
       <div
         className={`col-span-12 md:col-span-4 ${reverse ? "md:order-1" : ""} ${
-          featured ? "bg-primary text-primary-foreground p-7 md:p-8 self-stretch flex flex-col justify-center" : "md:pt-4"
+          featured
+            ? "bg-primary text-primary-foreground p-7 md:p-8 self-stretch flex flex-col justify-center"
+            : "md:pt-4"
         }`}
       >
         {featured && (
@@ -180,7 +163,6 @@ function ProjectBlock({
         )}
 
         <div className="flex items-center gap-3 mb-5">
-          {/* Index chip — dark green on cream, terracotta on featured dark green */}
           <span
             aria-hidden
             className={`inline-block w-[7px] h-[7px] shrink-0 ${
@@ -189,15 +171,19 @@ function ProjectBlock({
           />
           <span
             className={`font-serif-display font-light text-[2.5rem] md:text-[3rem] leading-none tabular-nums ${
-              featured ? "text-primary-foreground/40" : "text-foreground/25"
+              featured
+                ? "text-primary-foreground/40"
+                : "text-foreground/25"
             }`}
             style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
           >
-            {project.index}
+            {card.index}
           </span>
           <span
             className={`text-[10px] uppercase tracking-[0.28em] tabular-nums ${
-              featured ? "text-primary-foreground/55" : "text-foreground/50"
+              featured
+                ? "text-primary-foreground/55"
+                : "text-foreground/50"
             }`}
           >
             / 03
@@ -209,7 +195,7 @@ function ProjectBlock({
             featured ? "text-primary-foreground" : "text-foreground"
           }`}
         >
-          {project.title}
+          {card.title}
         </h3>
 
         <p
@@ -217,11 +203,11 @@ function ProjectBlock({
             featured ? "text-primary-foreground/80" : "text-foreground/70"
           }`}
         >
-          {project.summary}
+          {card.summary}
         </p>
 
         <Link
-          href={project.href}
+          href={`/projects/${card.slug}`}
           className={`group relative inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.22em] font-medium py-1 ${
             featured ? "text-primary-foreground" : "text-foreground"
           }`}
