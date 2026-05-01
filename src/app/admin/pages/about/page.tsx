@@ -3,10 +3,15 @@
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Plus, Trash2 } from "lucide-react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import { CloudinaryUpload } from "@/components/admin/CloudinaryUpload";
+import {
+  Field,
+  Section,
+  inputClass,
+} from "@/components/admin/form-utils";
 import { ABOUT_FALLBACK } from "@/lib/cms/about-fallback";
 import type {
   AboutPage,
@@ -15,9 +20,6 @@ import type {
   ValueItem,
   CmsImage,
 } from "@/types/cms";
-
-const inputClass =
-  "w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
 
 export default function EditAboutPage() {
   const router = useRouter();
@@ -73,28 +75,32 @@ export default function EditAboutPage() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto px-6 py-12 text-gray-500">Loading…</div>
+      <div className="container mx-auto px-6 md:px-10 max-w-3xl py-12 text-foreground/55 text-[12px] uppercase tracking-[0.22em]">
+        Loading…
+      </div>
     );
   }
 
   return (
     <div>
-      <div className="max-w-3xl mx-auto px-6 pt-8">
+      <div className="container mx-auto px-6 md:px-10 max-w-3xl pt-12">
         <Link
           href="/admin/pages"
-          className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-foreground/55 hover:text-foreground mb-6 transition-colors"
         >
-          <ArrowLeft size={14} /> Pages
+          <ArrowLeft size={12} /> Pages
         </Link>
-        <h1 className="font-serif text-3xl font-bold text-gray-900">
+        <h1 className="font-serif text-[clamp(2rem,4vw,3rem)] font-light leading-[1.05] text-foreground">
           About page
         </h1>
-        <p className="text-sm text-gray-500 font-mono mt-1">/about</p>
+        <p className="text-[11px] uppercase tracking-[0.22em] text-foreground/40 font-mono mt-2">
+          /about
+        </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto px-6 py-8 space-y-10"
+        className="container mx-auto px-6 md:px-10 max-w-3xl py-10 space-y-10"
       >
         <Section title="Hero">
           <Field label="Heading" required>
@@ -142,16 +148,16 @@ export default function EditAboutPage() {
           {values.map((v, i) => (
             <div
               key={i}
-              className="bg-gray-50 rounded-lg p-4 space-y-3 border border-gray-200"
+              className="bg-surface-alt p-4 space-y-3 border border-foreground/10"
             >
               <div className="flex justify-between items-center">
-                <span className="text-xs font-medium text-gray-500 uppercase">
+                <span className="text-[10px] uppercase tracking-[0.28em] text-foreground/50 tabular-nums">
                   Value {i + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => setValues(values.filter((_, j) => j !== i))}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-foreground/40 hover:text-accent transition-colors"
                   aria-label="Remove value"
                 >
                   <Trash2 size={14} />
@@ -184,7 +190,7 @@ export default function EditAboutPage() {
           <button
             type="button"
             onClick={() => setValues([...values, { title: "", description: "" }])}
-            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-foreground/65 hover:text-accent transition-colors"
           >
             <Plus size={14} /> Add value
           </button>
@@ -194,16 +200,16 @@ export default function EditAboutPage() {
           {team.map((m, i) => (
             <div
               key={i}
-              className="bg-gray-50 rounded-lg p-4 space-y-3 border border-gray-200"
+              className="bg-surface-alt p-4 space-y-3 border border-foreground/10"
             >
               <div className="flex justify-between items-center">
-                <span className="text-xs font-medium text-gray-500 uppercase">
+                <span className="text-[10px] uppercase tracking-[0.28em] text-foreground/50 tabular-nums">
                   Team member {i + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => setTeam(team.filter((_, j) => j !== i))}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-foreground/40 hover:text-accent transition-colors"
                   aria-label="Remove team member"
                 >
                   <Trash2 size={14} />
@@ -253,7 +259,7 @@ export default function EditAboutPage() {
             onClick={() =>
               setTeam([...team, { name: "", role: "", bio: "" }])
             }
-            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-foreground/65 hover:text-accent transition-colors"
           >
             <Plus size={14} /> Add team member
           </button>
@@ -262,26 +268,30 @@ export default function EditAboutPage() {
         {error && (
           <div
             role="alert"
-            className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800"
+            className="border-l-2 border-accent pl-4 py-1 text-[13px] text-foreground/75 leading-relaxed"
           >
             {error}
           </div>
         )}
 
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+        <div className="flex justify-end items-center gap-6 pt-6 border-t border-foreground/15">
           <button
             type="button"
             onClick={() => router.push("/admin/pages")}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+            className="text-[11px] uppercase tracking-[0.22em] text-foreground/55 hover:text-foreground transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3 text-[12px] font-medium uppercase tracking-[0.22em] hover:bg-primary/90 disabled:bg-foreground/30 disabled:cursor-not-allowed transition-colors"
           >
             {submitting ? "Saving…" : "Save changes"}
+            <ArrowUpRight
+              size={13}
+              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
           </button>
         </div>
       </form>
@@ -300,42 +310,3 @@ function updateTeam(
   setTeam(next);
 }
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="space-y-4">
-      <h2 className="font-serif text-xl font-semibold text-gray-900 pb-2 border-b border-gray-200">
-        {title}
-      </h2>
-      {children}
-    </section>
-  );
-}
-
-function Field({
-  label,
-  required,
-  hint,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      {children}
-      {hint && <p className="text-xs text-gray-500">{hint}</p>}
-    </div>
-  );
-}

@@ -42,11 +42,15 @@ export function CloudinaryUpload({ value, onChange, label = "Image" }: Props) {
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      {label && (
+        <label className="block text-[11px] uppercase tracking-[0.22em] text-foreground/65">
+          {label}
+        </label>
+      )}
 
       {value ? (
         <div className="space-y-3">
-          <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+          <div className="relative aspect-[4/3] bg-surface-alt rounded-lg overflow-hidden border border-foreground/10">
             <img
               src={value.url}
               alt={value.alt || ""}
@@ -55,7 +59,7 @@ export function CloudinaryUpload({ value, onChange, label = "Image" }: Props) {
             <button
               type="button"
               onClick={() => onChange(undefined)}
-              className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:bg-gray-100"
+              className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:bg-surface-alt"
               aria-label="Remove image"
             >
               <X size={16} />
@@ -66,7 +70,7 @@ export function CloudinaryUpload({ value, onChange, label = "Image" }: Props) {
             placeholder="Alt text (describe the image for accessibility)"
             value={value.alt}
             onChange={(e) => onChange({ ...value, alt: e.target.value })}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-foreground/25 px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-accent"
           />
         </div>
       ) : (
@@ -90,11 +94,11 @@ export function CloudinaryUpload({ value, onChange, label = "Image" }: Props) {
             <button
               type="button"
               onClick={() => open()}
-              className="w-full aspect-[4/3] bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+              className="w-full aspect-[4/3] bg-surface-alt border-2 border-dashed border-foreground/25 rounded-lg flex flex-col items-center justify-center text-foreground/55 hover:border-accent hover:text-accent transition-colors"
             >
               <Upload size={32} className="mb-2" />
               <span className="text-sm font-medium">Upload image</span>
-              <span className="text-xs text-gray-400 mt-1">
+              <span className="text-xs text-foreground/40 mt-1">
                 JPG, PNG, WebP up to 10 MB
               </span>
             </button>

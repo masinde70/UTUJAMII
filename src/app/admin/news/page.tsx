@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import type { News } from "@/types/cms";
-import { Plus, FileText, Sparkles } from "lucide-react";
+import { ArrowUpRight, Plus, Sparkles } from "lucide-react";
 import { SAMPLE_NEWS } from "@/lib/cms/sample-news";
 
 export default function AdminNewsList() {
@@ -42,9 +42,8 @@ export default function AdminNewsList() {
       !confirm(
         `Create ${missingSamples.length} sample article${missingSamples.length === 1 ? "" : "s"}? Existing articles will not be affected.`,
       )
-    ) {
+    )
       return;
-    }
     setSeeding(true);
     setSeedError(null);
     try {
@@ -55,11 +54,7 @@ export default function AdminNewsList() {
         if (existing.exists()) continue;
         const { slug, ...input } = sample;
         void slug;
-        await setDoc(ref, {
-          ...input,
-          createdAt: now,
-          updatedAt: now,
-        });
+        await setDoc(ref, { ...input, createdAt: now, updatedAt: now });
       }
       await load();
     } catch (err) {
@@ -70,17 +65,19 @@ export default function AdminNewsList() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-gray-900">
-            News & Insights
+    <div className="container mx-auto px-6 md:px-10 pt-12 md:pt-16">
+      <div className="grid grid-cols-12 gap-x-6 md:gap-x-10 mb-12 md:mb-16">
+        <div className="col-span-12 md:col-span-8">
+          <h1 className="font-serif text-[clamp(2.4rem,5vw,4rem)] font-light text-foreground leading-[1.05]">
+            News &amp; Insights —{" "}
+            <em className="not-italic text-foreground/55">dispatches.</em>
           </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Articles displayed on the public /news page.
+          <p className="text-[15px] text-foreground/65 leading-[1.7] mt-4 max-w-xl">
+            Articles displayed at /news. Each dispatch carries a markdown body
+            and a publish date.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="col-span-12 md:col-span-4 flex flex-col md:items-end gap-3 mt-6 md:mt-2">
           <button
             onClick={handleSeed}
             disabled={seeding || allSeeded}
@@ -89,9 +86,9 @@ export default function AdminNewsList() {
                 ? "All sample articles already exist"
                 : `Add ${missingSamples.length} sample article${missingSamples.length === 1 ? "" : "s"}`
             }
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="group inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-foreground/65 hover:text-foreground disabled:text-foreground/30 disabled:cursor-not-allowed transition-colors"
           >
-            <Sparkles size={16} />
+            <Sparkles size={13} />
             {seeding
               ? "Seeding…"
               : allSeeded
@@ -100,9 +97,9 @@ export default function AdminNewsList() {
           </button>
           <Link
             href="/admin/news/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+            className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.22em] hover:bg-primary/90 transition-colors"
           >
-            <Plus size={16} /> New article
+            <Plus size={13} /> New article
           </Link>
         </div>
       </div>
@@ -110,70 +107,85 @@ export default function AdminNewsList() {
       {seedError && (
         <div
           role="alert"
-          className="mb-6 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800"
+          className="mb-8 border-l-2 border-accent pl-4 py-1 text-[13px] text-foreground/75 leading-relaxed"
         >
           {seedError}
         </div>
       )}
 
       {articles === null ? (
-        <p className="text-gray-500">Loading…</p>
+        <p className="text-foreground/55 text-[12px] uppercase tracking-[0.22em] border-t border-foreground/15 pt-8">
+          Loading…
+        </p>
       ) : articles.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-          <FileText className="mx-auto text-gray-300 mb-3" size={32} />
-          <p className="text-gray-600 mb-4">No articles yet.</p>
-          <p className="text-sm text-gray-500">
-            Use the buttons above to seed sample articles or create from scratch.
+        <div className="border-t border-foreground/15 py-16 text-center">
+          <p className="text-foreground/55 text-[15px] leading-relaxed">
+            No articles yet. Use the buttons above to seed samples or publish
+            from scratch.
           </p>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left px-6 py-3 font-medium text-gray-700">
-                  Title
-                </th>
-                <th className="text-left px-6 py-3 font-medium text-gray-700">
-                  Published
-                </th>
-                <th className="text-left px-6 py-3 font-medium text-gray-700">
-                  Updated
-                </th>
-                <th className="text-right px-6 py-3 font-medium text-gray-700">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {articles.map((a) => (
-                <tr key={a.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">{a.title}</div>
-                    <div className="text-xs text-gray-500 font-mono mt-0.5">
-                      /news/{a.id}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    {new Date(a.publishedAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    {new Date(a.updatedAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <Link
-                      href={`/admin/news/${a.id}`}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="border-t border-foreground/15">
+          {articles.map((a, i) => (
+            <ArticleRow key={a.id} article={a} index={i + 1} />
+          ))}
         </div>
       )}
     </div>
+  );
+}
+
+function ArticleRow({ article, index }: { article: News; index: number }) {
+  return (
+    <Link
+      href={`/admin/news/${article.id}`}
+      className="group block border-b border-foreground/15 py-6 md:py-8"
+    >
+      <div className="grid grid-cols-12 gap-x-6 md:gap-x-10 items-start md:items-center">
+        <div className="col-span-2 md:col-span-1 flex items-center">
+          <span
+            className="font-serif-display font-light text-[1.6rem] leading-none tabular-nums text-foreground/30"
+            style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
+          >
+            {String(index).padStart(2, "0")}
+          </span>
+        </div>
+        <div className="col-span-10 md:col-span-6">
+          <h3 className="font-serif text-[1.15rem] md:text-[1.25rem] font-light leading-[1.2] text-foreground group-hover:text-primary transition-colors duration-500">
+            {article.title}
+          </h3>
+          <p className="text-[11px] uppercase tracking-[0.22em] text-foreground/40 font-mono mt-1">
+            /news/{article.id}
+          </p>
+        </div>
+        <div className="col-span-6 md:col-span-2 mt-3 md:mt-0">
+          <span className="text-[11px] uppercase tracking-[0.22em] text-foreground/55 tabular-nums">
+            {new Date(article.publishedAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </span>
+        </div>
+        <div className="col-span-6 md:col-span-2 mt-3 md:mt-0">
+          <span className="text-[11px] uppercase tracking-[0.22em] text-foreground/55 tabular-nums">
+            {new Date(article.updatedAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </span>
+        </div>
+        <div className="col-span-12 md:col-span-1 md:text-right mt-3 md:mt-0">
+          <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.22em] text-foreground font-medium">
+            Edit
+            <ArrowUpRight
+              size={12}
+              className="transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+            />
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }

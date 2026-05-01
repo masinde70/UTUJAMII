@@ -2,11 +2,12 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowUpRight, Plus, Trash2 } from "lucide-react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import { CloudinaryUpload } from "./CloudinaryUpload";
 import { MarkdownEditor } from "./MarkdownEditor";
-import { Plus, Trash2 } from "lucide-react";
+import { Field, inputClass } from "./form-utils";
 import type {
   CmsImage,
   ImpactMetric,
@@ -108,7 +109,10 @@ export function ProjectForm({ initialSlug, initial, mode }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto px-6 py-8 space-y-8">
+    <form
+      onSubmit={handleSubmit}
+      className="container mx-auto px-6 md:px-10 max-w-3xl py-8 space-y-8"
+    >
       <Field label="Title" required>
         <input
           type="text"
@@ -133,7 +137,7 @@ export function ProjectForm({ initialSlug, initial, mode }: Props) {
             setSlugTouched(true);
           }}
           disabled={mode === "edit"}
-          className={`${inputClass} font-mono ${mode === "edit" ? "bg-gray-100 cursor-not-allowed" : ""}`}
+          className={`${inputClass} font-mono ${mode === "edit" ? "bg-surface-alt cursor-not-allowed" : ""}`}
         />
       </Field>
 
@@ -146,7 +150,11 @@ export function ProjectForm({ initialSlug, initial, mode }: Props) {
         />
       </Field>
 
-      <Field label="Summary" required hint="Used on the projects listing card. 1–2 sentences.">
+      <Field
+        label="Summary"
+        required
+        hint="Used on the projects listing card. 1–2 sentences."
+      >
         <textarea
           required
           rows={3}
@@ -175,54 +183,39 @@ export function ProjectForm({ initialSlug, initial, mode }: Props) {
       <GalleryField gallery={gallery} onChange={setGallery} />
 
       {error && (
-        <div role="alert" className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800">
+        <div
+          role="alert"
+          className="border-l-2 border-accent pl-4 py-1 text-[13px] text-foreground/75 leading-relaxed"
+        >
           {error}
         </div>
       )}
 
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+      <div className="flex justify-end items-center gap-6 pt-6 border-t border-foreground/15">
         <button
           type="button"
           onClick={() => router.push("/admin/projects")}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+          className="text-[11px] uppercase tracking-[0.22em] text-foreground/55 hover:text-foreground transition-colors"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3 text-[12px] font-medium uppercase tracking-[0.22em] hover:bg-primary/90 disabled:bg-foreground/30 disabled:cursor-not-allowed transition-colors"
         >
-          {submitting ? "Saving…" : mode === "create" ? "Create project" : "Save changes"}
+          {submitting
+            ? "Saving…"
+            : mode === "create"
+              ? "Create project"
+              : "Save changes"}
+          <ArrowUpRight
+            size={13}
+            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
         </button>
       </div>
     </form>
-  );
-}
-
-const inputClass =
-  "w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
-
-function Field({
-  label,
-  required,
-  hint,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      {children}
-      {hint && <p className="text-xs text-gray-500">{hint}</p>}
-    </div>
   );
 }
 
@@ -235,9 +228,11 @@ function ImpactMetricsField({
 }) {
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-[11px] uppercase tracking-[0.22em] text-foreground/65">
         Impact metrics{" "}
-        <span className="text-gray-400 font-normal">(optional)</span>
+        <span className="text-foreground/40 normal-case tracking-normal text-[12px]">
+          (optional)
+        </span>
       </label>
       {metrics.map((m, i) => (
         <div key={i} className="flex gap-2">
@@ -266,7 +261,7 @@ function ImpactMetricsField({
           <button
             type="button"
             onClick={() => onChange(metrics.filter((_, j) => j !== i))}
-            className="text-red-600 hover:text-red-800 px-2"
+            className="text-foreground/40 hover:text-accent px-2 transition-colors"
             aria-label="Remove metric"
           >
             <Trash2 size={16} />
@@ -276,9 +271,9 @@ function ImpactMetricsField({
       <button
         type="button"
         onClick={() => onChange([...metrics, { value: "", label: "" }])}
-        className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+        className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.22em] text-foreground/65 hover:text-accent transition-colors"
       >
-        <Plus size={14} /> Add metric
+        <Plus size={13} /> Add metric
       </button>
     </div>
   );
@@ -293,19 +288,28 @@ function GalleryField({
 }) {
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-[11px] uppercase tracking-[0.22em] text-foreground/65">
         Gallery{" "}
-        <span className="text-gray-400 font-normal">(optional)</span>
+        <span className="text-foreground/40 normal-case tracking-normal text-[12px]">
+          (optional)
+        </span>
       </label>
       {gallery.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {gallery.map((img, i) => (
-            <div key={i} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-              <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
+            <div
+              key={i}
+              className="relative aspect-square bg-surface-alt overflow-hidden border border-foreground/10"
+            >
+              <img
+                src={img.url}
+                alt={img.alt}
+                className="w-full h-full object-cover"
+              />
               <button
                 type="button"
                 onClick={() => onChange(gallery.filter((_, j) => j !== i))}
-                className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
+                className="absolute top-2 right-2 bg-background/90 backdrop-blur-sm p-1 hover:bg-background transition-colors"
                 aria-label="Remove image"
               >
                 <Trash2 size={14} />

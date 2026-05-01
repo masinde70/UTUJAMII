@@ -14,7 +14,7 @@ export function MarkdownEditor({ value, onChange, rows = 20 }: Props) {
 
   return (
     <div className="space-y-0">
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b border-foreground/15">
         <TabButton active={tab === "edit"} onClick={() => setTab("edit")}>
           Edit
         </TabButton>
@@ -31,14 +31,14 @@ export function MarkdownEditor({ value, onChange, rows = 20 }: Props) {
           rows={rows}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-b-lg border border-t-0 border-gray-300 px-3 py-2 text-gray-900 font-mono text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full bg-surface border border-t-0 border-foreground/15 px-3 py-2 text-foreground font-mono text-sm focus:border-accent focus:outline-none transition-colors"
         />
       ) : (
-        <div className="rounded-b-lg border border-t-0 border-gray-300 bg-white p-6 min-h-[480px] overflow-auto">
+        <div className="border border-t-0 border-foreground/15 bg-surface p-6 min-h-[480px] overflow-auto">
           {value.trim() ? (
             <MarkdownBody source={value} />
           ) : (
-            <p className="text-gray-400 italic text-sm">
+            <p className="text-foreground/40 italic text-[13px]">
               Nothing to preview yet — type some markdown in the Edit tab.
             </p>
           )}
@@ -61,10 +61,10 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+      className={`px-4 py-2 text-[11px] uppercase tracking-[0.22em] font-medium border-b-2 -mb-px transition-colors ${
         active
-          ? "border-blue-600 text-blue-600"
-          : "border-transparent text-gray-500 hover:text-gray-700"
+          ? "border-accent text-foreground"
+          : "border-transparent text-foreground/50 hover:text-foreground"
       }`}
     >
       {children}

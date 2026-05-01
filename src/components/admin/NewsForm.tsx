@@ -2,11 +2,12 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowUpRight, Trash2 } from "lucide-react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import { CloudinaryUpload } from "./CloudinaryUpload";
 import { MarkdownEditor } from "./MarkdownEditor";
-import { Trash2 } from "lucide-react";
+import { Field, inputClass } from "./form-utils";
 import type { CmsImage, News, NewsInput } from "@/types/cms";
 
 type Props = {
@@ -29,9 +30,6 @@ function toDateTimeLocal(iso: string): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
-
-const inputClass =
-  "w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
 
 export function NewsForm({ initialSlug, initial, mode }: Props) {
   const router = useRouter();
@@ -121,7 +119,7 @@ export function NewsForm({ initialSlug, initial, mode }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl mx-auto px-6 py-8 space-y-8"
+      className="container mx-auto px-6 md:px-10 max-w-3xl py-8 space-y-8"
     >
       <Field label="Title" required>
         <input
@@ -147,7 +145,7 @@ export function NewsForm({ initialSlug, initial, mode }: Props) {
             setSlugTouched(true);
           }}
           disabled={mode === "edit"}
-          className={`${inputClass} font-mono ${mode === "edit" ? "bg-gray-100 cursor-not-allowed" : ""}`}
+          className={`${inputClass} font-mono ${mode === "edit" ? "bg-surface-alt cursor-not-allowed" : ""}`}
         />
       </Field>
 
@@ -194,56 +192,37 @@ export function NewsForm({ initialSlug, initial, mode }: Props) {
       {error && (
         <div
           role="alert"
-          className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800"
+          className="border-l-2 border-accent pl-4 py-1 text-[13px] text-foreground/75 leading-relaxed"
         >
           {error}
         </div>
       )}
 
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+      <div className="flex justify-end items-center gap-6 pt-6 border-t border-foreground/15">
         <button
           type="button"
           onClick={() => router.push("/admin/news")}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+          className="text-[11px] uppercase tracking-[0.22em] text-foreground/55 hover:text-foreground transition-colors"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3 text-[12px] font-medium uppercase tracking-[0.22em] hover:bg-primary/90 disabled:bg-foreground/30 disabled:cursor-not-allowed transition-colors"
         >
           {submitting
             ? "Saving…"
             : mode === "create"
               ? "Publish article"
               : "Save changes"}
+          <ArrowUpRight
+            size={13}
+            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
         </button>
       </div>
     </form>
-  );
-}
-
-function Field({
-  label,
-  required,
-  hint,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      {children}
-      {hint && <p className="text-xs text-gray-500">{hint}</p>}
-    </div>
   );
 }
 
@@ -256,15 +235,18 @@ function GalleryField({
 }) {
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">
-        Gallery <span className="text-gray-400 font-normal">(optional)</span>
+      <label className="block text-[11px] uppercase tracking-[0.22em] text-foreground/65">
+        Gallery{" "}
+        <span className="text-foreground/40 normal-case tracking-normal text-[12px]">
+          (optional)
+        </span>
       </label>
       {gallery.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {gallery.map((img, i) => (
             <div
               key={i}
-              className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200"
+              className="relative aspect-square bg-surface-alt overflow-hidden border border-foreground/10"
             >
               <img
                 src={img.url}
@@ -274,7 +256,7 @@ function GalleryField({
               <button
                 type="button"
                 onClick={() => onChange(gallery.filter((_, j) => j !== i))}
-                className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
+                className="absolute top-2 right-2 bg-background/90 backdrop-blur-sm p-1 hover:bg-background transition-colors"
                 aria-label="Remove image"
               >
                 <Trash2 size={14} />
