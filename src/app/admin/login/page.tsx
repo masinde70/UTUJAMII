@@ -2,6 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { signInWithEmailAndPassword, type AuthError } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 
@@ -26,67 +28,112 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 space-y-6"
-      >
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-gray-900">
-            Admin sign in
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            UTUJAMII content management
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <label className="block">
-            <span className="text-sm font-medium text-gray-700">Email</span>
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-gray-700">Password</span>
-            <input
-              type="password"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </label>
-        </div>
-
-        {error && (
-          <div
-            role="alert"
-            className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800"
+    <main className="min-h-screen bg-background flex flex-col">
+      {/* Editorial top bar */}
+      <div className="container mx-auto px-6 md:px-10 pt-8">
+        <div className="flex items-end justify-between border-b border-foreground/15 pb-4">
+          <Link
+            href="/"
+            className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-foreground/50 hover:text-foreground transition-colors"
           >
-            {error}
-          </div>
-        )}
+            ← Utu Jamii
+          </Link>
+          <span className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-foreground/50 tabular-nums">
+            § Editor · Restricted
+          </span>
+        </div>
+      </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+      {/* Centered form */}
+      <div className="flex-1 flex items-center justify-center px-6 md:px-10 py-16">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md space-y-10"
         >
-          {submitting ? "Signing in…" : "Sign in"}
-        </button>
+          <div className="space-y-3">
+            <span className="text-[10px] uppercase tracking-[0.28em] text-accent font-medium">
+              Sign in
+            </span>
+            <h1 className="font-serif text-[clamp(2rem,4vw,3rem)] font-light text-foreground leading-[1.1]">
+              The editor's{" "}
+              <em className="not-italic text-foreground/55">desk.</em>
+            </h1>
+            <p className="text-[14px] text-foreground/65 leading-relaxed">
+              Content management for the UTU JAMII publication. Restricted to
+              authorised editors.
+            </p>
+          </div>
 
-        <p className="text-xs text-gray-500 text-center">
-          Need access? Contact the site administrator.
-        </p>
-      </form>
+          <div className="space-y-6">
+            <label className="block">
+              <span className="block text-[11px] uppercase tracking-[0.22em] text-foreground/55 mb-2">
+                Email
+              </span>
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-transparent border-b border-foreground/25 pb-2 text-foreground placeholder:text-foreground/35 focus:outline-none focus:border-accent transition-colors"
+              />
+            </label>
+
+            <label className="block">
+              <span className="block text-[11px] uppercase tracking-[0.22em] text-foreground/55 mb-2">
+                Password
+              </span>
+              <input
+                type="password"
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-transparent border-b border-foreground/25 pb-2 text-foreground placeholder:text-foreground/35 focus:outline-none focus:border-accent transition-colors"
+              />
+            </label>
+          </div>
+
+          {error && (
+            <div
+              role="alert"
+              className="border-l-2 border-accent pl-4 py-1 text-[13px] text-foreground/75 leading-relaxed"
+            >
+              {error}
+            </div>
+          )}
+
+          <div className="space-y-6">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3 text-[12px] font-medium uppercase tracking-[0.22em] hover:bg-primary/90 disabled:bg-foreground/30 disabled:cursor-not-allowed transition-colors"
+            >
+              {submitting ? "Signing in…" : "Sign in"}
+              <ArrowUpRight
+                size={13}
+                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </button>
+
+            <p className="text-[11px] uppercase tracking-[0.22em] text-foreground/40">
+              Need access? Contact the site administrator.
+            </p>
+          </div>
+        </form>
+      </div>
+
+      {/* Editorial bottom imprint */}
+      <div className="container mx-auto px-6 md:px-10 pb-6">
+        <div className="flex items-center justify-between border-t border-foreground/15 pt-4">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-foreground/30">
+            Weaving Threads · Since 2016
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-foreground/30 tabular-nums">
+            Dar es Salaam — 06°49′S
+          </span>
+        </div>
+      </div>
     </main>
   );
 }
