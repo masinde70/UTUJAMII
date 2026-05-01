@@ -51,7 +51,12 @@ export default async function ProjectsPage() {
         ) : (
           <div className="space-y-24 md:space-y-32">
             {projects.map((project, i) => (
-              <ProjectEntry key={project.id} project={project} index={i} />
+              <ProjectEntry
+                key={project.id}
+                project={project}
+                index={i}
+                featured={i === 1}
+              />
             ))}
           </div>
         )}
@@ -63,9 +68,11 @@ export default async function ProjectsPage() {
 function ProjectEntry({
   project,
   index,
+  featured = false,
 }: {
   project: Project;
   index: number;
+  featured?: boolean;
 }) {
   const reverse = index % 2 === 1;
   const projectNo = String(index + 1).padStart(2, "0");
@@ -92,12 +99,10 @@ function ProjectEntry({
               <div className="absolute inset-0 bg-primary/10" />
             )}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20" />
-            {/* Corner marks */}
             <span className="absolute top-3 left-3 w-3 h-3 border-t border-l border-white/70" />
             <span className="absolute top-3 right-3 w-3 h-3 border-t border-r border-white/70" />
             <span className="absolute bottom-3 left-3 w-3 h-3 border-b border-l border-white/70" />
             <span className="absolute bottom-3 right-3 w-3 h-3 border-b border-r border-white/70" />
-            {/* Project stamp */}
             {project.client && (
               <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm px-3 py-1.5">
                 <span className="text-[10px] uppercase tracking-[0.25em] text-foreground/70">
@@ -114,35 +119,67 @@ function ProjectEntry({
           </figcaption>
         </figure>
 
-        {/* Text */}
+        {/* Text — alternates plain / featured-on-dark-green */}
         <div
-          className={`col-span-12 md:col-span-4 flex flex-col ${reverse ? "md:order-1" : ""}`}
+          className={`col-span-12 md:col-span-4 ${reverse ? "md:order-1" : ""} ${
+            featured
+              ? "bg-primary text-primary-foreground p-7 md:p-8 self-stretch flex flex-col justify-center"
+              : "flex flex-col"
+          }`}
         >
+          {featured && (
+            <span className="text-[10px] uppercase tracking-[0.28em] text-accent font-medium mb-5">
+              Featured Engagement
+            </span>
+          )}
+
           <div className="flex items-center gap-3 mb-5">
             <span
               aria-hidden
-              className="inline-block w-[7px] h-[7px] shrink-0 bg-primary"
+              className={`inline-block w-[7px] h-[7px] shrink-0 ${
+                featured ? "bg-accent" : "bg-primary"
+              }`}
             />
             <span
-              className="font-serif-display font-light text-[2.5rem] md:text-[3rem] leading-none tabular-nums text-foreground/25"
+              className={`font-serif-display font-light text-[2.5rem] md:text-[3rem] leading-none tabular-nums ${
+                featured ? "text-primary-foreground/40" : "text-foreground/25"
+              }`}
               style={{ fontVariationSettings: '"opsz" 144, "SOFT" 100' }}
             >
               {projectNo}
             </span>
           </div>
 
-          <h2 className="font-serif text-[clamp(1.5rem,2.6vw,2rem)] font-light leading-[1.15] text-foreground mb-5 group-hover:text-primary transition-colors duration-500">
+          <h2
+            className={`font-serif text-[clamp(1.5rem,2.6vw,2rem)] font-light leading-[1.15] mb-5 transition-colors duration-500 ${
+              featured
+                ? "text-primary-foreground"
+                : "text-foreground group-hover:text-primary"
+            }`}
+          >
             {project.title}
           </h2>
 
-          <p className="text-[14.5px] text-foreground/70 leading-[1.7] mb-7">
+          <p
+            className={`text-[14.5px] leading-[1.7] mb-7 ${
+              featured ? "text-primary-foreground/80" : "text-foreground/70"
+            }`}
+          >
             {project.summary}
           </p>
 
-          <div className="inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.22em] text-foreground font-medium">
+          <div
+            className={`inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.22em] font-medium ${
+              featured ? "text-primary-foreground" : "text-foreground"
+            }`}
+          >
             <span className="relative">
               Read Case Study
-              <span className="absolute -bottom-0.5 left-0 w-full h-px bg-foreground/40 group-hover:bg-accent transition-colors duration-500" />
+              <span
+                className={`absolute -bottom-0.5 left-0 w-full h-px transition-colors duration-500 group-hover:bg-accent ${
+                  featured ? "bg-primary-foreground/80" : "bg-foreground/40"
+                }`}
+              />
             </span>
             <ArrowUpRight
               size={13}
